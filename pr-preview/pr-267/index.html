@@ -328,15 +328,23 @@ SPDX-License-Identifier: Apache-2.0
       <section id="flashdreams">
 <h1>FlashDreams<a class="headerlink" href="#flashdreams" title="Link to this heading">#</a></h1>
 <div class="fd-hero fd-hero-band docutils container">
+<div class="fd-split fd-split-asymmetric docutils container">
+<div class="fd-split-text docutils container">
+<p class="fd-hero-title rubric">FlashDreams</p>
 <div class="fd-hero-lede docutils container">
 <p>A high-performance inference and serving library for
-interactive autoregressive video and world models.</p>
+interactive autoregressive video and world models,
+and a general platform for real-time world-model applications
+across gaming, autonomous vehicles, robotics, simulated
+or virtual environments, and more!</p>
 </div>
 <div class="fd-cta-row docutils container">
-<p><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary reference internal" href="quickstart/index.html"><span class="doc">Get started</span></a></p>
+<p><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary reference internal" href="quickstart/index.html"><span class="doc">Get Started!</span></a></p>
 <p><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-outline-secondary reference external" href="https://github.com/NVIDIA/flashdreams"><span>GitHub</span></a></p>
 <p><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-outline-secondary reference internal" href="community/index.html"><span class="doc">Community</span></a></p>
 </div>
+</div>
+<div class="fd-split-visual docutils container">
 <div class="fd-promo-video-wrap">
   <video
     class="fd-promo-video-player"
@@ -376,31 +384,82 @@ interactive autoregressive video and world models.</p>
     video.addEventListener("ended", showOverlay);
   })();
 </script></div>
+</div>
+</div>
 <section id="why-flashdreams">
-<h2>Why FlashDreams<a class="headerlink" href="#why-flashdreams" title="Link to this heading">#</a></h2>
-<p>FlashDreams is built for the case where a diffusion video model has to
-respond in real time — a closed-loop world-model demo, a driving
-simulator, an interactive scene rollout. The optimisations needed for
-that case are different from those used by an offline, one-shot video
-generator, and FlashDreams organises them into three abstractions that
-every shipped recipe uses.</p>
-<p><strong>KV-cached transformers.</strong> Each autoregressive chunk re-uses prior
-context as a KV cache instead of recomputing it. Self-forcing and
-causal-forcing training regimes are first-class.</p>
-<p><strong>Ring attention.</strong> Context-parallel attention across ranks, so
-long-horizon generation scales out instead of OOM-ing on a single GPU.</p>
-<p><strong>CUDA-graph capture.</strong> The steady-state forward is captured into a
-CUDA graph after warmup, collapsing Python and launch overhead in the
-hot loop.</p>
-<p>The library is Apache-2.0 and developed in the open. The internals are
-covered in the <a class="reference internal" href="documentation.html"><span class="doc">documentation</span></a>.</p>
+<h2>Why FlashDreams?<a class="headerlink" href="#why-flashdreams" title="Link to this heading">#</a></h2>
+<div class="fd-split fd-split-reverse fd-split-asymmetric-reverse docutils container">
+<div class="fd-split-text docutils container">
+<p>A world model learns to generate and evolve an environment over time. In
+practice that usually means video, but the same idea extends to actions,
+state, audio, sensor input, and control signals. Serving one means keeping
+a session alive while input, model state, GPU inference, and output advance
+together, rather than producing a single static clip, which is what makes
+interactive simulation, robotics, autonomy, and game-like experiences
+possible.</p>
+</div>
+<div class="fd-split-visual docutils container">
+<img alt="Offline one-shot video inference compared with online autoregressive world-model serving." class="zoomable" src="_images/compare-offline-online-video-model-v2.jpg" />
+</div>
+</div>
+<p>FlashDreams is built for that real-time case: a closed-loop world-model
+demo, a driving simulator, an interactive scene rollout. Generating
+high-quality video is not enough on its own. The runtime has to keep an
+interactive session responsive while the model continues to advance the
+world. That comes down to four things:</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-4 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm fd-feature docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Low latency</div>
+<p class="sd-card-text">Keep the interaction responsive when controls, sensors, or user
+input change.</p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm fd-feature docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+High throughput</div>
+<p class="sd-card-text">Keep the GPU busy across autoregressive steps and multi-GPU
+execution.</p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm fd-feature docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+Steady streaming generation</div>
+<p class="sd-card-text">Stream frames or chunks at a steady pace while the session
+continues.</p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm fd-feature docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+World-state evolution</div>
+<p class="sd-card-text">Carry rolling state forward so the generated world evolves across
+steps.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
 </section>
 <section id="performance">
 <h2>Performance<a class="headerlink" href="#performance" title="Link to this heading">#</a></h2>
-<p>Each tile shows per-step latency at steady state — post-warmup,
-post-graph-capture — measured against the upstream library’s own
-runner on the same hardware and the same checkpoint. Full methodology
-lives on the <a class="reference internal" href="benchmarks.html"><span class="doc">benchmarks page</span></a>.</p>
+<p>Each tile shows the steady-state per-step speedup — post-warmup,
+post-graph-capture — over a separate existing implementation of the
+same model. Both runs use the same weights on the same GPU, so the
+gain comes from FlashDreams’ runtime alone; each tile names its
+baseline below. Full methodology lives on the
+<a class="reference internal" href="benchmarks.html"><span class="doc">benchmarks page</span></a>.</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-4 sd-g-3 sd-g-xs-3 sd-g-sm-3 sd-g-md-3 sd-g-lg-3 docutils">
 <div class="sd-col sd-d-flex-column docutils">
@@ -425,7 +484,7 @@ lives on the <a class="reference internal" href="benchmarks.html"><span class="d
 <p>LingBot-World speedup</p>
 </div>
 <div class="fd-stat-note docutils container">
-<p>H100, vs Official baseline (1950 ms → 629 ms per step).</p>
+<p>H100 (4×GPU), vs Official baseline (1950 ms → 629 ms per step).</p>
 </div>
 </div>
 </div>
@@ -459,15 +518,15 @@ lives on the <a class="reference internal" href="benchmarks.html"><span class="d
 </div>
 </section>
 <section id="try-flashdreams">
-<h2>Try FlashDreams<a class="headerlink" href="#try-flashdreams" title="Link to this heading">#</a></h2>
+<h2>Try FlashDreams!<a class="headerlink" href="#try-flashdreams" title="Link to this heading">#</a></h2>
 <p>The <a class="reference internal" href="quickstart/index.html"><span class="doc">Get Started guide</span></a> walks from a fresh
 checkout to a generated frame on a single GPU.</p>
 <div class="fd-cta-row docutils container">
-<p><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary reference internal" href="quickstart/index.html"><span class="doc">Get started</span></a></p>
+<p><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-primary reference internal" href="quickstart/index.html"><span class="doc">Get Started!</span></a></p>
 </div>
 </section>
 <section id="supported-models">
-<h2>Supported models<a class="headerlink" href="#supported-models" title="Link to this heading">#</a></h2>
+<h2>Supported Models<a class="headerlink" href="#supported-models" title="Link to this heading">#</a></h2>
 <p>Streaming and autoregressive recipes emit per-step output with
 sub-second latency once warm; bidirectional recipes are kept as
 full-block parity references. Each model page carries the canonical
